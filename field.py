@@ -4,17 +4,19 @@ import math
 from matplotlib.patches import Rectangle
 from utilities import liang_barsky
 
+
 class Field:
     def __init__(self) -> None:
         self.goal_size = 5/12 # in ft
 
-        self.goal_coords = [ (0,0),   # center
-            (-2, -4), (-4, -2), 
-            (2, 4), (4,2), # neutral
-            (2, -4), (4, -2), # red goals
-            (-2, 4), (-4, 2) # blue goals
-        ]
-        # index 0 = center, 1-4 = neutral, 5-6 = red, 7-8 blue
+        self.goal_coords = [ # TODO: add some property for color of each goal 
+            (0,0),   # center
+            (-2, -4), (-4, -2), # neutral (1-4)
+            (2, 4), (4,2), 
+            (2, -4), (4, -2), # red goals (5-6)
+            (-2, 4), (-4, 2) # blue goals (7-8)
+        ] 
+
     
     def plot_base(self):
 
@@ -27,10 +29,10 @@ class Field:
         ax.axhline(y=0, color='gray', linewidth=1, alpha=0.3)
         ax.axvline(x=0, color='gray', linewidth=1, alpha=0.3)
 
-        # Draw goals as rectangles at actual size
+        # draw goals as rectangles at actual size
         half_size = self.goal_size / 2
     
-        colors_by_index = {
+        colors_by_index = { # TODO: combine with self.goal_coords in refactor
             0: 'black',      # center
             1: 'gray', 2: 'gray', 3: 'gray', 4: 'gray',  # neutral
             5: 'red', 6: 'red',      # red goals
@@ -39,14 +41,14 @@ class Field:
         
         for index, (gx, gy) in enumerate(self.goal_coords):
             color = colors_by_index[index]
+
            # center is at (gx, gy)
             rect = Rectangle((gx - half_size, gy - half_size), 
                             self.goal_size, self.goal_size, 
                             color=color, alpha=0.7, ec='black', linewidth=1)
             ax.add_patch(rect)
-    
-        
 
+        # configuration settings
         ax.set_box_aspect(1)
         ax.set_xlabel('Y (ft)')
         ax.set_ylabel('X (ft)')
@@ -56,7 +58,14 @@ class Field:
         return fig, ax
 
     def predicted_output(self, input_pos, fov:int, range:float):
-        '''read the camera sensor and return visible goals'''
+        '''
+        return which goals would be visible at a given pose.
+        
+        Args:
+            input_pos: where the pose is (x, y, th)
+            fov: the horizontal FOV (deg)
+            range: how far away you can see goals (ft)
+        '''
         
         px, py, heading = input_pos
         half_size = self.goal_size / 2

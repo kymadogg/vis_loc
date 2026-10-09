@@ -1,8 +1,17 @@
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+# to-do list
+    # setting colors
+        # color schemes
+        # individual elements (robot, rays, etc.)
+    # move the field plotting here as well...
+    
 class Render:
     def __init__(self, ax):
+        # field base plot
         self.ax = ax
 
         # for the particle filter graphics
@@ -13,8 +22,6 @@ class Render:
         # for the robot graphics
         self.bot_marker = None
         self.bot_arrow = None 
-
-        # 
 
 
     @staticmethod
@@ -100,3 +107,39 @@ class Render:
         self.pf_pose_arrow = self.ax.arrow(y, x, dy, dx, head_width=0.2, head_length=0.3, fc='red', ec='red')
 
         self.render()
+
+
+    def camera_view(self, camera_data):
+        fig, ax = plt.subplots(figsize=(14, 3))
+
+        # if nothing is visible, show nothing and return
+        if not camera_data:
+            ax.set_title('Camera Output (no visible goals)')
+            ax.set_xlabel('Relative Degree (0 = straight ahead)')
+            ax.axvline(x=0, color='black', linestyle='--', alpha=0.5)
+            plt.show()
+            plt.close(fig)
+            return
+
+        colors = []
+        xs = []
+
+        for color, rel in camera_data:
+            xs.append(rel)
+            if color == 0:
+                colors.append('black')
+            elif color == 1:
+                colors.append('blue')
+            elif color == 2:
+                colors.append('red')
+            else:
+                colors.append('gray')
+
+        ax.bar(xs, np.ones(len(xs)), color=colors, width=0.8)
+        ax.set_xlabel('Relative Degree (0 = straight ahead)')
+        ax.set_title('Camera Output (occlusion-aware)')
+        ax.axvline(x=0, color='black', linestyle='--', alpha=0.5)
+        plt.show()
+        plt.close(fig)
+
+    
