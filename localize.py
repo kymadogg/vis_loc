@@ -168,7 +168,7 @@ class Localize:
             pass
 
         return pose
-
+    
     def calc_error(self, expected, observed):
         '''compares sensor (observed) reading to particle (expected)'''
 

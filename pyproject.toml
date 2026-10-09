@@ -1,0 +1,17 @@
+[project]
+name = "vis-loc"
+version = "0.1.0"
+description = "Localizing using relative location of objects"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-ra", "-q"]
+testpaths = [
+    "tests"
+]

@@ -109,13 +109,13 @@ class Camera:
 
             # map index to color code (same as Field)
             if i == 0:
-                color = 0
+                color = 0 # center
             elif 1 <= i <= 4:
                 color = 3
             elif 5 <= i <= 6:
                 color = 1
             else:
-                color = 2
+                color = 2 # blue?
 
             readings.append((color, rel if visible else None))
 

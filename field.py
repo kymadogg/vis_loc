@@ -55,7 +55,7 @@ class Field:
 
         return fig, ax
 
-    def predicted_output(self, input_pos:tuple, fov, range):
+    def predicted_output(self, input_pos:tuple[float, float, float], fov:int, range:float):
         '''read the camera sensor and return visible goals'''
         
         px, py, heading = input_pos
