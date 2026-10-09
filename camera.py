@@ -16,7 +16,6 @@ class Camera:
 
     def raycast(self):
         x, y, heading = self.position
-        self.detected_goals = []
 
         # remove previously drawn rays
         for ray in self.rays:
