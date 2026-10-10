@@ -40,4 +40,4 @@ module-name = "vis_loc"
 module-root = ""
 
 [project.scripts]
-test = "run_tests:main"
+test = "tests.run_tests:main"
