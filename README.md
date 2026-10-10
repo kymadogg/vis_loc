@@ -19,7 +19,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 
 # run the notebook
-uv run main.ipynb
+uv run sim
 ```
 
 ## Files, Classes, and Functions
@@ -32,6 +32,10 @@ Some short descriptions of the various things that can be found in this project.
 
 ## Tests
 There are some beginner tests in the `/tests` directory to help verify that the filter is working as it should.
+```bash
+# running all tests with pytest-cov
+uv run test
+```
 
 ## Things to Fix:
 - [ ] how N = 0 is handled in `Localize.calc_error()`
