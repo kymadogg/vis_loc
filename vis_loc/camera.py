@@ -33,7 +33,7 @@ class Camera:
             x_end = x + self.range * np.cos(rad)
             y_end = y + self.range * np.sin(rad)
 
-            line = self.ax.plot([y, y_end], [x, x_end], 'b-', alpha=0.3, linewidth=0.5)
+            line, = self.ax.plot([y, y_end], [x, x_end], 'b-', alpha=0.3, linewidth=0.5)
             self.rays.append(line)
 
     def read(self):
