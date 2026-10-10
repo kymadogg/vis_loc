@@ -9,18 +9,26 @@ requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.11.2",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0"
 ]
 
 [build-system]
 requires = ["uv_build >= 0.12.19, <0.13.0"]
 build-backend = "uv_build"
 
-[tool.pytest]
+[tool.pytest.ini_options]
 minversion = "9.0"
-addopts = ["-ra", "-q"]
+addopts = "-p pytest_cov -ra -q --cov=vis_loc --cov-report=term-missing"
 testpaths = [
     "tests"
 ]
+
+[tool.coverage.run]
+omit = ["**/__init__.py"]
+branch = true
+source = ["vis_loc"]
+
+# add --cov-fail-under=80 for failing at a certain coverage
 
 [dependency-groups]
 dev = [
@@ -32,4 +40,4 @@ module-name = "vis_loc"
 module-root = ""
 
 [project.scripts]
-test = "unittest:main"
+test = "run_tests:main"
