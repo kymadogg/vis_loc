@@ -1,9 +1,8 @@
 [project]
 name = "vis-loc"
-version = "0.1.0"
-description = "Localizing using relative location of objects"
-authors = [
-  {name = "K Herbstzuber", email = "kmherbstzuber@wpi.edu"}]
+version = "1.0.0"
+description = "Localizing using relative location of objects and a webcam"
+authors = [{name = "K Herbstzuber", email = "kmherbstzuber@wpi.edu"}]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -11,7 +10,6 @@ dependencies = [
     "matplotlib>=3.11.2",
     "nbconvert>=7.17.1",
     "pandas>=3.0.6",
-    "pyqt6>=6.11.0",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
 ]
@@ -32,8 +30,6 @@ omit = ["**/__init__.py"]
 branch = true
 source = ["vis_loc"]
 
-# add --cov-fail-under=80 for failing at a certain coverage
-
 [dependency-groups]
 dev = [
     "uv-script>=0.1.9",
@@ -42,6 +38,19 @@ dev = [
 [tool.uv.build-backend]
 module-name = "vis_loc"
 module-root = ""
+source-exclude = [ # exclude from both source and wheel
+  "**/.*",           
+  "/.github",   
+  "/docs",
+  "/logs",
+  "/plots",
+  "uv.lock",
+  "*.log"
+]
+wheel-exclude = [
+  "benchmarks/**",
+   "/tests"
+]
 
 [project.scripts]
 test = "tests.run_tests:main"
