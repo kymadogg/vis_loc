@@ -2,12 +2,18 @@
 name = "vis-loc"
 version = "0.1.0"
 description = "Localizing using relative location of objects"
+authors = [
+  {name = "K Herbstzuber", email = "kmherbstzuber@wpi.edu"}]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.11.2",
     "pytest>=9.1.1",
 ]
+
+[build-system]
+requires = ["uv_build >= 0.12.19, <0.13.0"]
+build-backend = "uv_build"
 
 [tool.pytest]
 minversion = "9.0"
@@ -15,3 +21,15 @@ addopts = ["-ra", "-q"]
 testpaths = [
     "tests"
 ]
+
+[dependency-groups]
+dev = [
+    "uv-script>=0.1.9",
+]
+
+[tool.uv.build-backend]
+module-name = "vis_loc"
+module-root = ""
+
+[project.scripts]
+test = "unittest:main"

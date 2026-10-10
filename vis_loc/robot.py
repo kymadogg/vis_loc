@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from camera import Camera
-from utilities import wrap_angle
+from vis_loc.camera import Camera
+from .utilities import wrap_angle
 
 class Robot:
     def __init__(self, x, y, heading, ax, field, debug:bool) -> None:
@@ -77,5 +77,4 @@ class Robot:
                     pass
 
         return self.location
-
 

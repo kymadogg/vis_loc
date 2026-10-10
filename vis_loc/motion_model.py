@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import typing as npt
-from utilities import ang_diff, wrap_angle
+from vis_loc.utilities import ang_diff, wrap_angle
 
 class MotionModel:
     def __init__(self, a1, a2, a3, a4, a5) -> None:
