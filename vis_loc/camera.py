@@ -1,8 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
-from field import Field
-from utilities import liang_barsky
+from .field import Field
+from .utilities import liang_barsky
 
 class Camera:
     def __init__(self, range:float, fov:int, position, field:Field, ax, debug:bool) -> None:
@@ -34,10 +33,7 @@ class Camera:
             x_end = x + self.range * np.cos(rad)
             y_end = y + self.range * np.sin(rad)
 
-            # self.ax.plot([y, y_end], [x, x_end], 'b-', alpha=0.3, linewidth=0.5)
-            # self.rays.append(((x, y), (x_end, y_end)))
-
-            line, = self.ax.plot([y, y_end], [x, x_end], 'b-', alpha=0.3, linewidth=0.5)
+            line = self.ax.plot([y, y_end], [x, x_end], 'b-', alpha=0.3, linewidth=0.5)
             self.rays.append(line)
 
     def read(self):

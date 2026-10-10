@@ -1,9 +1,7 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import math
+import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-from utilities import liang_barsky
-
+from vis_loc.utilities import liang_barsky
 
 class Field:
     def __init__(self) -> None:

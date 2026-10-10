@@ -2,9 +2,9 @@ import math
 import numpy as np
 import numpy.typing as npt
 
-from utilities import wrap_angle, ang_diff
-from field import Field
-from motion_model import MotionModel
+from vis_loc.utilities import wrap_angle, ang_diff
+from vis_loc.field import Field
+from vis_loc.motion_model import MotionModel
 
 # to-do list for this class
     # restructure particles variable to include weights
@@ -65,7 +65,7 @@ class Localize:
 
 
     # TODO: make this the sole noise generating function
-    # either move it to update(), or add a method to MotionModel for no motion.
+    # either move it to update(), or add a method to MotionModel for no motion
     @staticmethod
     def _add_noise(particles, static_noise=(0.05, 0.05, 5.0)):
         '''
@@ -326,5 +326,5 @@ class Localize:
             # NOTE: future service call /global_localization below (i think this resets weights to uniform dist?) 
             # self.weights = np.full(len(self.particles), 1.0 / len(self.particles)) 
         
-        return self.estimated_pose(), self.particles
+        return self.estimated_pose(), self.particles, self.weights
 
