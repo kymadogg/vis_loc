@@ -1,0 +1,35 @@
+name: Build Python Wheel
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Initialize uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked --dev
+ 
+      - name: Run coverage tests
+        run: uv run test
+
+      - name: Build wheels and sdist
+        run: uv build
+
+      - name: Upload Wheels to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
