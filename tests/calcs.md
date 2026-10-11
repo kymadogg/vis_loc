@@ -100,3 +100,40 @@ $y = (2 + 4) / 2 = 3$ </br>
 $th = (3 + 13) / 2 = 8$ </br>
 
 So the expected pose should be: `(2.0, 3.0, 8.0)`
+
+## `test_field`
+Having matplotlib functions in the mix is going to make this a little more difficult. imo there are 2 options:
+### pytest-mpl
+This id a package that lets you compare matplotlib figures using pytest. [GitHub](https://github.com/matplotlib/pytest-mpl)
+
+Generating a report: `pytest --mpl --mpl-generate-summary=html` </br>
+saving plots to a directory: `pytest --plots my_test_plots/`</br>
+ganerate baseline images: `pytest --mpl-generate-path=baseline`</br>
+run things per usual: `pytest --mpl`
+
+### `unittest.mock` & Agg
+Just kinda skip over the fact that there are supposed to be plots...
+
+Toggle the mpl backend that writes to file buffers instead of a popup window.
+```python
+import matplotlib
+matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
+```
+
+Import the `unittest.mock` module and use a decorator (`@patch()`) to take care of the behavior from `plt.show()`.
+
+```python
+from unittest.mock import patch
+
+def my_plotting_function():
+    plt.plot([1, 2, 3])
+    plt.show()
+
+@patch("matplotlib.pyplot.show")
+def test_my_plot(mock_show):
+    my_plotting_function()
+```
+
+## some references
+- [Medium article about GH Artifacts](https://levelup.gitconnected.com/github-actions-how-to-share-data-between-jobs-fc1547defc3e)

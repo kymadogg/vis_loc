@@ -1,9 +1,49 @@
-import numpy as np
 import pytest
+import numpy as np
+import numpy.typing as npt
 
 from vis_loc.field import Field
 from vis_loc.localize import Localize
+from vis_loc.motion_model import MotionModel
+
 field = Field()
+
+'''testing class set up and configuration with parameters'''
+
+@pytest.fixture # NOTE: maybe make a high and low count instance (i.e. high is > 100 and low is 3)
+def loc():
+    return Localize(500, 90, True)
+
+def test_constructor():
+    loc = Localize(500, 90)
+
+    assert isinstance(loc, Localize)
+
+@pytest.mark.parametrize(
+    "attr_name, exp_type",
+    [
+        ("max_particles", int),
+        ("penalty", int),
+        ("debug", bool),
+        ("random",bool),
+        ("force_resample", bool),
+        ("sensor_sigma_deg", int),
+        ("model", str),
+        ("motion", MotionModel),
+        ("field", Field),
+        # ("particles", npt.NDArray), # FIXME: add specific types to each array (i.e dtype=np.float32)
+        # ("weights", npt.NDArray),
+        # ("particle_errors", npt.NDArray)
+    ]
+)
+
+def test_attribute_types(loc, attr_name, exp_type):
+    attr_value = getattr(loc, attr_name)
+    
+    assert isinstance(attr_value, exp_type)
+
+
+'''testing the initial draw, update, covariance, and weight functions'''
 
 def test_initial_draw_creates_uniform_particles_and_weights():
     localizer = Localize(10, 90)
@@ -100,14 +140,21 @@ def test_update_moves_particles_and_returns_estimated_pose(monkeypatch):
     np.testing.assert_allclose(particles, exp_result)
     assert pose == pytest.approx((2.0, 3.0, 8.0))
     assert weights == pytest.approx([0.5, 0.5])
+    
+
+def test_delta_odom_is_zero():
+    localizer = Localize(1, 90)
+    localizer.particles = np.array([
+        [2.0, 2.0, 10.0]
+    ])
+    pose = (2.0, 2.0, 0.0)
+    delta_odom = (0.0, 0.0, 0.0)
+    sensor_reading = field.predicted_output(pose, 120, 12)
+    new_pose = localizer.update(delta_odom, sensor_reading)
+    assert new_pose[0] != pose
 
 
 '''testing the error function specifically'''
-def test_constructor():
-    loc = Localize(500, 90)
-
-    assert isinstance(loc, Localize)
-
 
 def test_same_pose():
     loc = Localize(500, 90)
@@ -132,5 +179,35 @@ def test_different_location_same_obs():
     loc = Localize(500, 90)
     obs = field.predicted_output((2, 2, 0), 120, 12)
     p = field.predicted_output((-2.0, -2.0, 270), 120, 12)
-
     assert loc.calc_error(p, obs) == 0
+
+'''debug=True outputs the correct number of lines'''
+
+@pytest.fixture
+def debug_true_loc():
+    loc = Localize(2, 1, True)
+    loc.weights = np.array([0.5, 0.5])
+    loc.particles = np.array([
+        [5.0, 5.0, 10.0],
+        [4.0, 4.0, 10.0]
+    ])
+    return loc
+
+@pytest.mark.parametrize(
+    "function_name, inputs, expected_lines",
+    [
+        ("initial_draw", (2,), 3),
+        ("estimated_pose", (), 1),
+        ("update", ((0.1, 0.1, 20), field.predicted_output((5.0, 5.0, 10.0), 120, 12)), 3)
+    ]
+)
+def test_debug_is_true(debug_true_loc, capsys, function_name, inputs, expected_lines):
+  
+    method = getattr(debug_true_loc, function_name)
+    method(*inputs)
+
+    captured = capsys.readouterr()
+    lines = captured.out.splitlines()
+
+    assert len(lines) == expected_lines
+

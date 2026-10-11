@@ -26,7 +26,7 @@ testpaths = [
 ]
 
 [tool.coverage.run]
-omit = ["**/__init__.py"]
+omit = ["**/__init__.py", "run.py"] # run.py is the entry point for running the sim
 branch = true
 source = ["vis_loc"]
 
@@ -47,7 +47,7 @@ source-exclude = [ # exclude from both source and wheel
   "uv.lock",
   "*.log"
 ]
-wheel-exclude = [
+wheel-exclude = [ # exclude from just the wheel
   "benchmarks/**",
    "/tests"
 ]
