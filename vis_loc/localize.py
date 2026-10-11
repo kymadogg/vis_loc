@@ -6,10 +6,6 @@ from vis_loc.utilities import wrap_angle, ang_diff
 from vis_loc.field import Field
 from vis_loc.motion_model import MotionModel
 
-# to-do list for this class
-    # restructure particles variable to include weights
-        # opt 1: make a dataclass / struct
-        # opt 2: add a float element to the NDArray
 
 class Localize:
     def __init__(self, max_particles:int, penalty:int, debug=False) -> None:
@@ -26,8 +22,8 @@ class Localize:
         self.model:str = "omni" # TODO: actually implement in update() 
 
         # other classes
-        self.motion = MotionModel(0.01, 0.02, 0.02, 0.02, 0.01) # TODO: make separate variables
-        self.field = Field() # for generating predicted goal headings
+        self.motion:MotionModel = MotionModel(0.01, 0.02, 0.02, 0.02, 0.01) # TODO: make separate variables
+        self.field:Field = Field() # for generating predicted goal headings
 
         # initializing various components 
         self.particles:npt.NDArray = np.zeros((0, 3))
@@ -69,7 +65,7 @@ class Localize:
     @staticmethod
     def _add_noise(particles, static_noise=(0.05, 0.05, 5.0)):
         '''
-        Add noise to the particles. Could either be from odometry update or not moving (service call?)
+        Add noise to the particles when there is no odometry update (service call?)
         
         Args:
             particles: current simulated potential poses
@@ -271,7 +267,7 @@ class Localize:
         '''
 
         # motion update to the particles
-        if delta_odom is None or delta_odom == (0.0, 0.0, 0.0):
+        if delta_odom == (0.0, 0.0, 0.0):
             moved_particles = Localize._add_noise(self.particles)
         else:
             moved_particles = self.motion.omnidirectional(delta_odom, self.particles)

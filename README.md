@@ -8,7 +8,7 @@ Localizing using only relative heading of certain objects proof of concept. Or r
 
 Visualized using Matplotlib and Jupyter Notebook (`main.ipynb`)</br>
 ![Jupyter Notebook animation](.docs/omni_model_testing.gif) 
-> Soon to be made into a ROS package.
+> Soon to be made into a ROS package
 
 ## Running the Demo
 ```bash
@@ -18,7 +18,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # sync uv
 uv sync
 
-# run the notebook
+# run the notebook as a tk window
 uv run sim
 ```
 
@@ -36,6 +36,3 @@ There are some beginner tests in the `/tests` directory to help verify that the 
 # running all tests with pytest-cov
 uv run test
 ```
-
-## Things to Fix:
-- [ ] how N = 0 is handled in `Localize.calc_error()`
