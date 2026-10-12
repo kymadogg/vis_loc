@@ -2,11 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-# to-do list
-    # setting colors
-        # color schemes
-        # individual elements (robot, rays, etc.)
-    # move the field plotting here as well...
     
 class Render:
     def __init__(self, ax):
@@ -69,11 +64,11 @@ class Render:
         y = particles[:, 1]
         th = particles[:, 2]
 
-        rad = np.radians(th)
-        dx = np.cos(rad) * 0.4
+        rad = np.radians(th) 
+        dx = np.cos(rad) * 0.4 # flipped for plotting
         dy = np.sin(rad) * 0.4
         
-        self.pf_quiver = self.ax.quiver(y, x, dy, dx, weights, scale=1, scale_units='xy', 
+        self.pf_quiver = self.ax.quiver(y, x, dy, dx, weights, scale=1, scale_units='xy', # flipped for plotting
                                     angles='xy', alpha=0.8, cmap='plasma')
         
         divider = make_axes_locatable(self.ax)
@@ -109,6 +104,15 @@ class Render:
 
 
     def camera_view(self, camera_data):
+        '''
+        takes the current view of the camera and renders it in a separate 14 x 3 plot
+
+        Args:
+            camera_data: what the current camera sees
+
+        Returns:
+            fig: the figure to be rendered later by plt.show()
+        '''
         fig, ax = plt.subplots(figsize=(14, 3))
 
         # if nothing is visible, show nothing and return
@@ -138,7 +142,7 @@ class Render:
         ax.set_xlabel('Relative Degree (0 = straight ahead)')
         ax.set_title('Camera Output (occlusion-aware)')
         ax.axvline(x=0, color='black', linestyle='--', alpha=0.5)
-        plt.show()
-        plt.close(fig)
+
+        return fig
 
     
