@@ -36,3 +36,9 @@ There are some beginner tests in the `/tests` directory to help verify that the 
 # running all tests with pytest-cov
 uv run test
 ```
+
+### pytest-mpl
+Some of the tests include compairing plots using the plugin `pytest-mpl`.
+
+Replace `-mpl` with `--mpl-generate-path=tests/baseline` to generate baseline plots to test against.
+
