@@ -12,6 +12,7 @@ dependencies = [
     "pandas>=3.0.6",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
+    "pytest-mpl>=0.19.0",
 ]
 
 [build-system]
@@ -20,7 +21,7 @@ build-backend = "uv_build"
 
 [tool.pytest.ini_options]
 minversion = "9.0"
-addopts = "-p pytest_cov -ra -q --cov=vis_loc --cov-report=term-missing"
+addopts = "-p pytest_cov -p pytest_mpl -ra -q --cov=vis_loc --cov-report=term-missing --mpl" 
 testpaths = [
     "tests"
 ]

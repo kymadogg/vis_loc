@@ -5,22 +5,22 @@ Current stats using `uv run test`:
 Name                      Stmts   Miss Branch BrPart  Cover   Missing
 ---------------------------------------------------------------------
 vis_loc/camera.py            63     63     24      0     0%   1-87
-vis_loc/field.py             60     18     20      1    74%   24-59, 95->88
+vis_loc/field.py             60      0     20      1    99%   92->85
 vis_loc/localize.py         137     20     30      3    85%   50-60, 77, 299-300, 308-320
 vis_loc/motion_model.py      56     23      2      0    57%   16-50
-vis_loc/rendering.py         75     75     14      0     0%   1-137
-vis_loc/robot.py             57     57     10      0     0%   1-80
-vis_loc/utilities.py         49     11     24      2    79%   6-7, 11-12, 19, 31-36, 82
+vis_loc/rendering.py         75     75     14      0     0%   1-142
+vis_loc/robot.py             57     57     10      0     0%   1-79
+vis_loc/utilities.py         49     11     24      2    79%   5-6, 9-10, 16, 26-31, 76
 ---------------------------------------------------------------------
-TOTAL                       497    267    124      6    47%
+TOTAL                       497    249    124      6    50%
 ```
 
 ## Camera
 - 1-87: the entire thing
 
 ## Field
-- 24-59: `plot_base()`
-- 95->88: `predicted_output()`
+<!-- - 24-59: `plot_base()` -->
+- 95->85: weird edge case where an occluded goal is found **first** then a non-occluded one is found
 
 ## Localize
 - 50-60: `_resample()`

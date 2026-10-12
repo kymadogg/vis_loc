@@ -11,8 +11,8 @@ class Field:
             (0,0),   # center
             (-2, -4), (-4, -2), # neutral (1-4)
             (2, 4), (4,2), 
-            (2, -4), (4, -2), # red goals (5-6)
-            (-2, 4), (-4, 2) # blue goals (7-8)
+            (-4, 2), (-2, 4), # red goals (5-6)
+            (4, -2), (2, -4) # blue goals (7-8)
         ] 
 
     
@@ -37,7 +37,7 @@ class Field:
             7: 'blue', 8: 'blue'     # blue goals
         }
         
-        for index, (gx, gy) in enumerate(self.goal_coords):
+        for index, (gy, gx) in enumerate(self.goal_coords): # NOTE: x and y should be flopped since plotting is backwards
             color = colors_by_index[index]
 
            # center is at (gx, gy)
