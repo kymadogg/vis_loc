@@ -7,7 +7,7 @@ Localizing using only relative heading of certain objects proof of concept. Or r
 
 
 Visualized using Matplotlib and Jupyter Notebook (`main.ipynb`)</br>
-![Jupyter Notebook animation](.docs/omni_model_testing.gif) 
+![Jupyter Notebook animation](.docs/particle_filter.gif) 
 > Soon to be made into a ROS package
 
 ## Running the Demo
