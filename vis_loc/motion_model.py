@@ -3,15 +3,26 @@ from numpy import typing as npt
 from vis_loc.utilities import ang_diff, wrap_angle
 
 class MotionModel:
-    def __init__(self, a1, a2, a3, a4, a5) -> None:
-        self.alpha_1 = a1
-        self.alpha_2 = a2
-        self.alpha_3 = a3
-        self.alpha_4 = a4
-        self.alpha_5 = a5
+    def __init__(self, a1:float, a2:float, a3:float, a4:float, a5:float, seed:None|int=None) -> None:
+        self.alpha_1:float = a1
+        self.alpha_2:float = a2
+        self.alpha_3:float = a3
+        self.alpha_4:float = a4
+        self.alpha_5:float = a5
+        self.rng = np.random.default_rng(seed)
+
 
     def differential(self, delta:tuple, particles:npt.NDArray):
-        '''motion model for a diff drive robot, adapted from nav2_amcl'''
+        '''
+        motion model for a diff drive robot, adapted from nav2_amcl
+
+        Args:
+            delta: change in movement (x,y,th)
+            particles: a 2D NDArray of potential poses in the format [x, y, th]
+
+        Returns:
+            updated_particles: the poarticles after noise is applied
+        '''
 
         dx, dy, dth = delta
         d_tr = np.hypot(dx, dy)
@@ -27,18 +38,21 @@ class MotionModel:
         d_r1_noise = np.minimum(np.abs(ang_diff(d_r1, 0.0)),np.abs(ang_diff(d_r1, 180.0)))
         d_r2_noise = np.minimum(np.abs(ang_diff(d_r2, 0.0)),np.abs(ang_diff(d_r2, 180.0)))
 
+        # noise distributions
         r1_noise_stddev = np.sqrt(self.alpha_1 * d_r1_noise ** 2 + self.alpha_2 * d_tr ** 2)
         r2_noise_stddev = np.sqrt(self.alpha_1 * d_r2_noise ** 2 + self.alpha_2 * d_tr ** 2)
         tr_noise_stddev = np.sqrt(self.alpha_3 * d_tr ** 2 + self.alpha_4 * d_r1_noise ** 2 + self.alpha_4 * d_r2_noise ** 2)
 
-        d_r1_hat = d_r1 - np.random.normal(0, r1_noise_stddev)
-        d_r2_hat = d_r2 - np.random.normal(0, r2_noise_stddev)
-        d_tr_hat = d_tr - np.random.normal(0, tr_noise_stddev)
+        # sample noises
+        d_r1_hat = d_r1 - self.rng.normal(0, r1_noise_stddev)
+        d_r2_hat = d_r2 - self.rng.normal(0, r2_noise_stddev)
+        d_tr_hat = d_tr - self.rng.normal(0, tr_noise_stddev)
 
         # convert some stuff to radians for trig
         th_r = np.deg2rad(particles[:,2])
         d_r1_hat_r = np.deg2rad(d_r1_hat)
 
+        # calc new particles from old ones + noise
         x = particles[:, 0] + (d_tr_hat * np.cos(th_r + d_r1_hat_r))
         y = particles[:, 1] + (d_tr_hat * np.sin(th_r + d_r1_hat_r))
         th = particles[:, 2] + (d_r1_hat + d_r2_hat)
@@ -50,8 +64,17 @@ class MotionModel:
         return updated_particles
     
   
-    def omnidirectional(self, delta, particles:npt.NDArray):
-        '''motion model for a omni directional robot, adapted from nav2_amcl'''
+    def omnidirectional(self, delta:tuple, particles:npt.NDArray):
+        '''
+        motion model for a omni directional robot, adapted from nav2_amcl
+        
+        Args:
+            delta: change in movement (x,y,th)
+            particles: a 2D NDArray of potential poses in the format [x, y, th]
+
+        Returns:
+            updated_particles: the poarticles after noise is applied
+        '''
         dx, dy, dth = delta
 
         th_r = np.deg2rad(particles[:,2])
@@ -65,9 +88,9 @@ class MotionModel:
         strafe_hat_stddev = np.sqrt(self.alpha_4 * d_rot**2 + self.alpha_5 * d_trans**2)
 
         # sample noises
-        d_trans_hat = d_trans + np.random.normal(0, trans_hat_stddev)
-        d_rot_hat = d_rot + np.random.normal(0, rot_hat_stddev)
-        d_strafe_hat = np.random.normal(0, strafe_hat_stddev)
+        d_trans_hat = d_trans + self.rng.normal(0, trans_hat_stddev)
+        d_rot_hat = d_rot + self.rng.normal(0, rot_hat_stddev)
+        d_strafe_hat = self.rng.normal(0, strafe_hat_stddev)
 
         # calc delta heading
         motion_ang = np.arctan2(dy, dx)
@@ -76,7 +99,8 @@ class MotionModel:
 
         c_heading = np.cos(d_heading)
         s_heading = np.sin(d_heading)
-
+        
+        # calc new particles from old ones + noise
         x = particles[:, 0] + (d_trans_hat * c_heading + d_strafe_hat * s_heading)
         y = particles[:, 1] + (d_trans_hat * s_heading - d_strafe_hat * c_heading)
         th = particles[:, 2] + np.rad2deg(d_rot_hat)
