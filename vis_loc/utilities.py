@@ -32,12 +32,24 @@ def average_covariance(covariance):
 
 def liang_barsky(x1, y1, x2, y2, rx, ry, half):
     '''
-    liang-barsky algorithm, checks whether the robot-to-goal line passes through a goal-sized rectangle centered at another goal. 
+    liang-barsky algorithm, checks whether the robot-to-goal line passes through a 
+    goal-sized rectangle centered at another goal. basically, check whether a line 
+    segment intersects an axis-aligned square.
 
-    x1, y1 = robot location (start of line segment)
-    x2, y2 = goal location (end of line segment)
-    rx, ry = rectangle center
-    half = rectangle side length /2
+    Args:
+        (x1, y1): Coordinates of the segment's start point.
+        (x2, y2): Coordinates of the segment's end point.
+        (rx, ry): Coordinates of the square's center.
+        half: Half the square's side length.
+
+    Returns:
+        hit: a boolean that says if there was a hit or not
+        (xi, yi): the coordinates where the intersection/hit occur
+        t_hit: where on the line the hit occurs (0 = start, 1 = end)
+
+    If the segment starts inside the square, the start point is returned with 
+    ``t = 0``. Touching the square's boundary counts as an intersection.
+
     '''
     
     # direction vector of the segment
@@ -73,5 +85,5 @@ def liang_barsky(x1, y1, x2, y2, rx, ry, half):
         xi = x1 + t_hit * dx
         yi = y1 + t_hit * dy
         return True, (xi, yi, t_hit)
-    return False, None
+    return False, None # pragma: no cover
     
